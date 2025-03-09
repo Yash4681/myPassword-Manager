@@ -134,7 +134,7 @@ const Manager = () => {
             <img
               ref={ref}
               onClick={handleShowPassword}
-              className="absolute size-4 top-3 right-2"
+              className="absolute size-4 top-3 right-2 hover:cursor-pointer"
               src="./images/eye.png"
             />
           </div>

@@ -53,7 +53,7 @@ const DataTable = ({ formArray, handleDelete, handleEdit }) => {
                         width="16"
                         src="https://img.icons8.com/material-two-tone/24/copy--v1.png"
                         alt="copy--v1"
-                        className="mx-2 hover"
+                        className="mx-2 hover:cursor-pointer"
                         onClick={() => handleCopy(item.site)}
                       />
                     </div>
@@ -65,7 +65,7 @@ const DataTable = ({ formArray, handleDelete, handleEdit }) => {
                         width="16"
                         src="https://img.icons8.com/material-two-tone/24/copy--v1.png"
                         alt="copy--v1"
-                        className="mx-2 hover"
+                        className="mx-2 hover:cursor-pointer"
                         onClick={() => handleCopy(item.username)}
                       />
                     </div>
@@ -77,7 +77,7 @@ const DataTable = ({ formArray, handleDelete, handleEdit }) => {
                         width="16"
                         src="https://img.icons8.com/material-two-tone/24/copy--v1.png"
                         alt="copy--v1"
-                        className="mx-2 hover"
+                        className="mx-2 hover:cursor-pointer"
                         onClick={() => handleCopy(item.password)}
                       />
                     </div>
