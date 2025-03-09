@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import DataTable from "./DataTable";
 import Logo from "./Logo";
+import { toast } from "react-toastify";
 
 const Manager = () => {
   const [formArray, setFormArray] = useState([]);
@@ -30,12 +32,73 @@ const Manager = () => {
   };
 
   const handleSave = () => {
-    setFormArray([...formArray, form]);
-    localStorage.setItem("formArray", JSON.stringify([...formArray, form]));
-    setForm({ site: "", username: "", password: "" });
+    if (
+      form.site.length > 3 &&
+      form.username.length > 3 &&
+      form.password.length > 3
+    ) {
+      toast("Password saved!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setFormArray([...formArray, { ...form, id: uuidv4() }]);
+      localStorage.setItem(
+        "formArray",
+        JSON.stringify([...formArray, { ...form, id: uuidv4() }])
+      );
+      setForm({ site: "", username: "", password: "" });
+    } else {
+      toast("Error: Password not saved!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
   };
+
+  const handleDelete = (id) => {
+    let conf = confirm("Do you want to delete this password?");
+    if (conf) {
+      toast("Password deleted!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setFormArray(formArray.filter((item) => item.id !== id));
+      localStorage.setItem(
+        "formArray",
+        JSON.stringify(formArray.filter((item) => item.id !== id))
+      );
+    }
+  };
+
+  const handleEdit = (id) => {
+    setForm(formArray.filter((item) => item.id === id)[0]);
+    setFormArray(formArray.filter((item) => item.id !== id));
+    localStorage.setItem(
+      "formArray",
+      JSON.stringify(formArray.filter((item) => item.id !== id))
+    );
+  };
+
   return (
-    <div className="container rounded-2xl mx-auto w-3/5 p-3 my-2">
+    <div className="min-h-[83.5vh] rounded-2xl mx-auto md:w-3/5 p-3 m-3 md:my-2">
       <Logo size="2xl" />
       <p className="text-center text-violet-900">
         Manage all your passwords at one place
@@ -49,7 +112,7 @@ const Manager = () => {
           value={form.site}
           onChange={handleChange}
         />
-        <div className="flex gap-5">
+        <div className="flex flex-col md:flex-row md:gap-5">
           <input
             className="bg-white px-3 border border-violet-400 my-2 rounded-full w-full"
             type="text"
@@ -77,20 +140,24 @@ const Manager = () => {
           </div>
         </div>
       </div>
-      <div className="container flex my-2 justify-center">
+      <div className="flex my-2 justify-center">
         <button
           onClick={handleSave}
-          className="rounded-full px-4 py-1 font-bold bg-violet-300"
+          className="rounded-full hover:cursor-pointer px-4 py-1 font-bold bg-violet-300"
         >
           <lord-icon
             src="https://cdn.lordicon.com/yrtftktn.json"
             trigger="hover"
             className="size-5 pt-1 mr-2"
           ></lord-icon>
-          Submit
+          Save
         </button>
       </div>
-      <DataTable formArray={formArray} />
+      <DataTable
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+        formArray={formArray}
+      />
     </div>
   );
 };

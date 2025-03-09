@@ -3,7 +3,7 @@ import Logo from "./Logo";
 
 const Footer = () => {
   return (
-    <div className="w-full fixed bottom-0 bg-slate-300">
+    <div className="w-full bg-slate-800 text-white">
       <Logo />
       <span className="flex text-sm justify-center">
         Made with{" "}
