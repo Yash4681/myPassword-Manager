@@ -72,9 +72,10 @@ const DataTable = ({ formArray, handleDelete, handleEdit }) => {
                   </td>
                   <td className="text-center py-2 border border-white">
                     <div className="flex justify-center">
-                      {item.password}{" "}
+                      {"*".repeat(item.password.length)}
                       <img
                         width="16"
+                        height="16"
                         src="https://img.icons8.com/material-two-tone/24/copy--v1.png"
                         alt="copy--v1"
                         className="mx-2 hover:cursor-pointer"

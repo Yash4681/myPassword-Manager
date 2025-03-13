@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import DataTable from "./DataTable";
 import Logo from "./Logo";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Manager = () => {
   const [formArray, setFormArray] = useState([]);
@@ -10,11 +11,14 @@ const Manager = () => {
   const ref = useRef();
   const passRef = useRef();
 
+  const getPasswordsFromDB = async () => {
+    const res = await axios.get("http://localhost:3000");
+    const data = await res.data;
+    setFormArray(data);
+  };
+
   useEffect(() => {
-    var localData = localStorage.getItem("formArray");
-    if (localData) {
-      setFormArray(JSON.parse(localData));
-    }
+    getPasswordsFromDB();
   }, []);
 
   const handleShowPassword = () => {
@@ -31,7 +35,7 @@ const Manager = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (
       form.site.length > 3 &&
       form.username.length > 3 &&
@@ -47,12 +51,16 @@ const Manager = () => {
         progress: undefined,
         theme: "dark",
       });
-      setFormArray([...formArray, { ...form, id: uuidv4() }]);
-      localStorage.setItem(
-        "formArray",
-        JSON.stringify([...formArray, { ...form, id: uuidv4() }])
-      );
+      const formData = form;
       setForm({ site: "", username: "", password: "" });
+      setFormArray([...formArray, { ...formData, id: uuidv4() }]);
+      await axios.post(
+        "http://localhost:3000",
+        { ...formData, id: uuidv4() },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     } else {
       toast("Error: Password not saved!", {
         position: "top-right",
@@ -67,7 +75,7 @@ const Manager = () => {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     let conf = confirm("Do you want to delete this password?");
     if (conf) {
       toast("Password deleted!", {
@@ -81,20 +89,20 @@ const Manager = () => {
         theme: "dark",
       });
       setFormArray(formArray.filter((item) => item.id !== id));
-      localStorage.setItem(
-        "formArray",
-        JSON.stringify(formArray.filter((item) => item.id !== id))
-      );
+      await axios.delete("http://localhost:3000", {
+        headers: { "Content-Type": "application/json" },
+        data: { id },
+      });
     }
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = async (id) => {
     setForm(formArray.filter((item) => item.id === id)[0]);
     setFormArray(formArray.filter((item) => item.id !== id));
-    localStorage.setItem(
-      "formArray",
-      JSON.stringify(formArray.filter((item) => item.id !== id))
-    );
+    await axios.delete("http://localhost:3000", {
+      headers: { "Content-Type": "application/json" },
+      data: { id },
+    });
   };
 
   return (
